@@ -6,7 +6,7 @@ pipeline {
     }
   }
   environment {
-	SONARQUBE_ENV = 'SonarQube'
+	SONARQUBE_ENV = 'SonarServer'
 	DOCKER_IMAGE = "shubhszone/ultimate-cicd:${BUILD_NUMBER}"
 	REGISTRY_CREDENTIALS = credentials('docker-cred')
   }
@@ -17,9 +17,8 @@ pipeline {
         //git branch: 'main', url: https://github.com/ShubhamBhavsar101/Jenkins-Zero-To-Hero.git'
       }
     }
-    stage('Build and Test') {
+    stage('Build') {
       steps {
-        sh 'ls -ltr'
         // build the project and create a JAR file
         sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn clean package'
       }
