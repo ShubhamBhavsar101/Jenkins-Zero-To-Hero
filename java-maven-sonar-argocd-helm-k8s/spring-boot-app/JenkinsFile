@@ -5,6 +5,11 @@ pipeline {
       args '--user root --network host -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/.m2:/root/.m2' // mount Docker socket to access the host's Docker daemon
     }
   }
+  environment {
+	SONARQUBE_ENV = 'SonarQube'
+	DOCKER_IMAGE = "shubhszone/ultimate-cicd:${BUILD_NUMBER}"
+	REGISTRY_CREDENTIALS = credentials('docker-cred')
+  }
   stages {
     stage('Checkout') {
       steps {
@@ -19,22 +24,16 @@ pipeline {
         sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn clean package'
       }
     }
-    stage('Static Code Analysis') {
-      environment {
-        SONAR_URL = "http://127.0.0.1:9000"
-      }
-      steps {
-        withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
-          sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+
+    stage('SonarQube Analysis') {
+        steps {
+            withSonarQubeEnv("${env.SONARQUBE_ENV}") {
+                sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn sonar:sonar'
+            }
         }
-      }
     }
+
     stage('Build and Push Docker Image') {
-      environment {
-        DOCKER_IMAGE = "shubhszone/ultimate-cicd:${BUILD_NUMBER}"
-        // DOCKERFILE_LOCATION = "java-maven-sonar-argocd-helm-k8s/spring-boot-app/Dockerfile"
-        REGISTRY_CREDENTIALS = credentials('docker-cred')
-      }
       steps {
         script {
             sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && docker build -t ${DOCKER_IMAGE} .'
