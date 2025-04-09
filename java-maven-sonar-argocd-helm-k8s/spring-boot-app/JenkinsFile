@@ -50,7 +50,9 @@ pipeline {
 		}
 		steps {
 			withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
-
+        sh """
+          git init
+        """
         sh """
 					ls -la
 					git config user.email 'shubhamcbhavsar198@gmail.com'
