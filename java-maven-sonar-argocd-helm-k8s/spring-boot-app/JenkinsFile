@@ -14,7 +14,7 @@ pipeline {
     stage('Checkout') {
       steps {
         sh 'echo passed'
-        //git branch: 'main', url: https://github.com/ShubhamBhavsar101/Jenkins-Zero-To-Hero.git'
+        git branch: 'main', url: https://github.com/ShubhamBhavsar101/Jenkins-Zero-To-Hero.git'
       }
     }
     stage('Build') {
@@ -51,7 +51,7 @@ pipeline {
 		steps {
 			withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
         sh """
-          git init
+          git status
         """
         sh """
 					ls -la
