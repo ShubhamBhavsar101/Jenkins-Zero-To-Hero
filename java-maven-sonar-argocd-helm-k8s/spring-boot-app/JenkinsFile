@@ -24,25 +24,25 @@ pipeline {
       }
     }
 
-    // stage('SonarQube Analysis') {
-    //     steps {
-    //         withSonarQubeEnv("${env.SONARQUBE_ENV}") {
-    //             sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn sonar:sonar'
-    //         }
-    //     }
-    // }
+    stage('SonarQube Analysis') {
+        steps {
+            withSonarQubeEnv("${env.SONARQUBE_ENV}") {
+                sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn sonar:sonar'
+            }
+        }
+    }
 
-    // stage('Build and Push Docker Image') {
-    //   steps {
-    //     script {
-    //         sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && docker build -t ${DOCKER_IMAGE} .'
-    //         def dockerImage = docker.image("${DOCKER_IMAGE}")
-    //         docker.withRegistry('https://index.docker.io/v1/', "docker-cred") {
-    //             dockerImage.push()
-    //         }
-    //     }
-    //   }
-    // }
+    stage('Build and Push Docker Image') {
+      steps {
+        script {
+            sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && docker build -t ${DOCKER_IMAGE} .'
+            def dockerImage = docker.image("${DOCKER_IMAGE}")
+            docker.withRegistry('https://index.docker.io/v1/', "docker-cred") {
+                dockerImage.push()
+            }
+        }
+      }
+    }
    	stage('Update Deployment File') {
 		environment {
 			GIT_REPO_NAME = "Jenkins-Zero-To-Hero"
@@ -51,11 +51,9 @@ pipeline {
 		steps {
 			withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
         sh """
-          git config --global --add safe.directory /var/lib/jenkins/workspace/Ultimate_CICD
+					git config --global --add safe.directory /var/lib/jenkins/workspace/Ultimate_CICD
           git status
-        """
-        sh """
-					ls -la
+
 					git config user.email 'shubhamcbhavsar198@gmail.com'
 					git config user.name 'Shubham Bhavsar'
 
