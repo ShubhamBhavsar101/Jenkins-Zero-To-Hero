@@ -50,7 +50,7 @@ pipeline {
 		}
 		steps {
 			withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
-				dir('java-maven-sonar-argocd-helm-k8s') {
+
         sh """
 					ls -la
 					git config user.email 'shubhamcbhavsar198@gmail.com'
@@ -67,4 +67,4 @@ pipeline {
 	}
   }
 }
-}
+
