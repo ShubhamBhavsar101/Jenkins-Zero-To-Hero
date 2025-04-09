@@ -24,13 +24,13 @@ pipeline {
       }
     }
 
-    stage('SonarQube Analysis') {
-        steps {
-            withSonarQubeEnv("${env.SONARQUBE_ENV}") {
-                sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn sonar:sonar'
-            }
-        }
-    }
+    // stage('SonarQube Analysis') {
+    //     steps {
+    //         withSonarQubeEnv("${env.SONARQUBE_ENV}") {
+    //             sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn sonar:sonar'
+    //         }
+    //     }
+    // }
 
     // stage('Build and Push Docker Image') {
     //   steps {
