@@ -51,6 +51,7 @@ pipeline {
 		steps {
 			withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
         sh """
+          git config --global --add safe.directory /var/lib/jenkins/workspace/Ultimate_CICD
           git status
         """
         sh """
